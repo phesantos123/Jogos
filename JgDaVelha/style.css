@@ -40,3 +40,9 @@ h1 {
   left: 0;
   right: 0;
 }
+
+button {
+  width: 100px;
+  height: 50px;
+  margin-top: 20px;
+}
