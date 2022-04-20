@@ -4,13 +4,14 @@ const CARD = 'card'
 const ICON = 'icon'
 
 startGame()
+
 function startGame() {
   initializeCards(game.createCardsFromTechs())
 }
 
 function initializeCards(cards) {
   let gameBoard = document.getElementById('gameBoard')
-
+  gameBoard.innerHTML = ''
   game.cards.forEach(card => {
     let cardElement = document.createElement('div')
     cardElement.id = card.id
@@ -19,7 +20,7 @@ function initializeCards(cards) {
 
     createCardContent(card, cardElement)
 
-    cardElement.addEventListener('click', flipcard)
+    cardElement.addEventListener('click', flipCard)
     gameBoard.appendChild(cardElement)
   })
 }
@@ -31,7 +32,7 @@ function createCardContent(card, cardElement) {
 function createCardFace(face, card, element) {
   let cardElementFace = document.createElement('div')
   cardElementFace.classList.add(face)
-  if (face == FRONT) {
+  if (face === FRONT) {
     let iconElement = document.createElement('img')
     iconElement.classList.add(ICON)
     iconElement.src = './assets/images/' + card.icon + '.png'
@@ -42,12 +43,16 @@ function createCardFace(face, card, element) {
   element.appendChild(cardElementFace)
 }
 
-function flipcard() {
+function flipCard() {
   if (game.setCard(this.id)) {
     this.classList.add('flip')
     if (game.secondCard) {
-      if (game.checkMath()) {
+      if (game.checkMatch()) {
         game.clearCards()
+        if (game.checkGameOver()) {
+          let gameOverLayer = document.getElementById('gameOver')
+          gameOverLayer.style.display = 'flex'
+        }
       } else {
         setTimeout(() => {
           let firstCardView = document.getElementById(game.firstCard.id)
@@ -59,4 +64,11 @@ function flipcard() {
       }
     }
   }
+}
+
+function restart() {
+  game.clearCards()
+  startGame()
+  let gameOverLayer = document.getElementById('gameOver')
+  gameOverLayer.style.display = 'none'
 }
